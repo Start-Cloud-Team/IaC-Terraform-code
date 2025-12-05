@@ -1,4 +1,4 @@
-######################codebuild iam######################
+######################codebuild policy######################
 resource "aws_iam_policy" "iac-codebuild-policy" {
   name = "${var.codebuild_name}-policy"
   policy = jsonencode({
@@ -54,6 +54,7 @@ resource "aws_iam_policy" "iac-codebuild-policy" {
   })
 }
 
+######################codebuild role######################
 resource "aws_iam_role" "iac-codebuild-role" {
   name = "${var.codebuild_name}-role"
 
