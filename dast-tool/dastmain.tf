@@ -1,6 +1,4 @@
-# --------------------------------------------------------------------------------
-# 1. SSM Parameter Store (비밀번호 저장소)
-# --------------------------------------------------------------------------------
+# 1. SSM Parameter Store
 resource "aws_ssm_parameter" "hawk_api_key" {
   name  = "/hawk/api_key"
   type  = "SecureString"
@@ -22,17 +20,13 @@ resource "aws_ssm_parameter" "docker_pw" {
   overwrite = true
 }
 
-# --------------------------------------------------------------------------------
-# 2. S3 Bucket for Logs (로그 저장소)
-# --------------------------------------------------------------------------------
+# 2. S3 Bucket for Logs 
 resource "aws_s3_bucket" "dast_logs" {
   bucket = var.s3_log_bucket_name
   force_destroy = true # 실습용이라 삭제 가능하게 함 (운영에선 false 추천)
 }
 
-# --------------------------------------------------------------------------------
-# 3. IAM Role & Policy (권한 설정 - 통합본)
-# --------------------------------------------------------------------------------
+# 3. IAM Role & Policy 
 resource "aws_iam_role" "codebuild_role" {
   name = "hawk-dast-codebuild-role"
 
@@ -69,7 +63,7 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "arn:aws:s3:::*" # ★ 중요: 파이프라인 아티팩트 버킷이 무엇이든 읽을 수 있게 허용
         ]
       },
-      # SSM 파라미터 읽기 + KMS 복호화 권한 (Rate Limit, API Key 해결용)
+      # SSM 파라미터 읽기 + KMS 복호화 권한 
       {
         Effect = "Allow",
         Action = ["ssm:GetParameters", "ssm:GetParameter", "kms:Decrypt"],
@@ -78,7 +72,6 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "arn:aws:kms:*:*:key/*"
         ]
       },
-      # (옵션) VPC 관련 권한 (지금은 Public이라 필요 없지만 혹시 몰라 넣어둠)
       {
         Effect = "Allow",
         Action = ["ec2:CreateNetworkInterface", "ec2:Describe*", "ec2:DeleteNetworkInterface"],
@@ -88,9 +81,8 @@ resource "aws_iam_role_policy" "codebuild_policy" {
   })
 }
 
-# --------------------------------------------------------------------------------
-# 4. CodeBuild Project (SSM 방식 - YAML 오류 수정)
-# --------------------------------------------------------------------------------
+
+# 4. CodeBuild Project 
 resource "aws_codebuild_project" "dast_scanner" {
   name          = "iac-Webgoat-Dast_tool"
   description   = "StackHawk DAST Scanner via SSM"
@@ -121,12 +113,10 @@ phases:
 
   build:
     commands:
-      - echo "------------------------------------------------------"
       - echo "Fetching Target URL from SSM Parameter Store..."
       - test -n "$TARGET_URL" || (echo 'TARGET_URL is empty' && exit 1)
       - sed -i "s|REPLACE_ME_URL|$TARGET_URL|g" stackhawk.yml
       - echo "URL Injection Complete."
-      - echo "------------------------------------------------------"
       - export API_KEY="$HAWK_API_KEY"
       - echo "Preparing environment variables for HawkScan..."
       - export _JAVA_OPTIONS="-Xms1g -Xmx4g"
@@ -135,7 +125,7 @@ phases:
       - mkdir -p /hawk
       - cp stackhawk.yml /hawk/stackhawk.yml
 
-      - echo "🚀 Starting HawkScan..."
+      - echo " Starting HawkScan..."
       - cd /hawk
       - hawk scan stackhawk.yml
 EOF
