@@ -93,8 +93,8 @@ resource "aws_iam_policy" "iac-codepipeline-policy" {
         "Effect": "Allow",
         "Action": "iam:PassRole",
         "Resource": [
-          "arn:aws:iam::329984431650:role/iac-task-role",
-          "arn:aws:iam::329984431650:role/iac-task-execution-role"
+          "arn:aws:iam::${var.account_id}:role/iac-task-role",
+          "arn:aws:iam::${var.account_id}:role/iac-task-execution-role"
         ],
         "Condition": {
           "StringEquals": {
@@ -205,4 +205,5 @@ resource "aws_iam_role" "iac-codepipeline-role" {
 resource "aws_iam_role_policy_attachment" "iac-codepipeline-policy-attach" {
   role       = aws_iam_role.iac-codepipeline-role.name
   policy_arn = aws_iam_policy.iac-codepipeline-policy.arn
+
 }
