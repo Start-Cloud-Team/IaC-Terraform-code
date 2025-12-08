@@ -19,20 +19,6 @@ resource "aws_codebuild_project" "iac-codebuild"{
         buildspec = <<-EOF
         version: 0.2
         env:
-            variables:
-                IMAGE_REPO_NAME: "iac-ecr"
-                IMAGE_TAG: "latest"
-                ACCOUNT_ID: "329984431650"
-                AWS_DEFAULT_REGION: "ap-northeast-2"
-                TZ: "America/Boise"
-                WEBGOAT_HOST: "www.webgoat.local"
-                WEBWOLF_HOST: "www.webwolf.local"
-                EXCLUDE_CATEGORIES: "CLIENT_SIDE,GENERAL,CHALLENGE"
-                EXCLUDE_LESSONS: "SqlInjectionAdvanced,SqlInjectionMitigations"
-                S3_BUCKET: "devops-security-scan-results"
-            parameter-store:
-                SONAR_TOKEN: /devops/sonarcloud/token
-                SNYK_TOKEN: /devops/snyk/token
 
         phases:
             install:
@@ -118,4 +104,5 @@ resource "aws_codebuild_project" "iac-codebuild"{
                 - appspec.yml
         EOF
     }
+
 }
