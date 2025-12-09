@@ -1,3 +1,4 @@
+####################GitHub connection create####################
 resource "aws_codestarconnections_connection" "iac-github-connection" {
   name          = "iac-github-connection"
   provider_type = "GitHub"
@@ -8,6 +9,7 @@ resource "aws_codestarconnections_connection" "iac-github-connection" {
   }
 }
 
+####################CodePipeline create####################
 resource "aws_codepipeline" "iac-codepipeline" {
   name     = "iac-codepipeline"
   role_arn = aws_iam_role.iac-codepipeline-role.arn
@@ -87,4 +89,5 @@ resource "aws_codepipeline" "iac-codepipeline" {
         }
     }
   }
+
 }
