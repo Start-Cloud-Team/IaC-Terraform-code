@@ -1,3 +1,4 @@
+####################CodePipeline Policy####################
 resource "aws_iam_policy" "iac-codepipeline-policy" {
   name = "iac-codepipeline-policy"
   policy = jsonencode({
@@ -187,6 +188,7 @@ resource "aws_iam_policy" "iac-codepipeline-policy" {
   })
 }
 
+####################CodePipeline Role####################
 resource "aws_iam_role" "iac-codepipeline-role" {
   name = "iac-codepipeline-role"
 
@@ -202,8 +204,10 @@ resource "aws_iam_role" "iac-codepipeline-role" {
   })
 }
 
+####################CodePipeline Role and Policy attach####################
 resource "aws_iam_role_policy_attachment" "iac-codepipeline-policy-attach" {
   role       = aws_iam_role.iac-codepipeline-role.name
   policy_arn = aws_iam_policy.iac-codepipeline-policy.arn
 
 }
+
