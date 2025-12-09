@@ -1,3 +1,4 @@
+####################CodeDeploy Policy create####################
 resource "aws_iam_policy" "iac-codedeploy-policy" {
     name = "iac-codedeploy-policy"
     policy = jsonencode({
@@ -51,6 +52,7 @@ resource "aws_iam_policy" "iac-codedeploy-policy" {
     })
 }
 
+####################CodeDeploy Role create####################
 resource "aws_iam_role" "iac-codedeploy-role" {
     name = "iac-codedeploy-role"
 
@@ -66,7 +68,9 @@ resource "aws_iam_role" "iac-codedeploy-role" {
     })
 }
 
+####################CodeDeploy Role and Policy attach####################
 resource "aws_iam_role_policy_attachment" "iac-codedeploy-attach" {
     role       = aws_iam_role.iac-codedeploy-role.name
     policy_arn = aws_iam_policy.iac-codedeploy-policy.arn
+
 }
