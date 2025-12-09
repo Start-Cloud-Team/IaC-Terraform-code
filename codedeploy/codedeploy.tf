@@ -1,8 +1,10 @@
+####################CodeDeploy app create####################
 resource "aws_codedeploy_app" "iac-codedeploy" {
     compute_platform = "ECS"
     name             = "iac-codedeploy"
 }
 
+####################CodeDeploy group create####################
 resource "aws_codedeploy_deployment_group" "iac-codedeploy-group" {
     app_name               = aws_codedeploy_app.iac-codedeploy.name
     deployment_config_name = "CodeDeployDefault.ECSAllAtOnce" #테스크를 한 번에 교체
@@ -50,4 +52,5 @@ resource "aws_codedeploy_deployment_group" "iac-codedeploy-group" {
             }
         }
     }
+
 }
